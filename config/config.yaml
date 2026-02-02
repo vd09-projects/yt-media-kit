@@ -1,0 +1,33 @@
+channels:
+  # - "https://www.youtube.com/@redditdramatale/videos"
+  - "https://www.youtube.com/@redditdramatale/videos"
+  - "https://www.youtube.com/channel/UCYNDl_kj9H7Qx6W6kkGxrmQ"
+  - "https://www.youtube.com/@FamiliaReddit"
+  - "https://www.youtube.com/@couple_stories_prod/videos"
+  - "https://www.youtube.com/@RedditFamilyTales/videos"
+  - "https://www.youtube.com/@MineQley/videos"
+  - "https://www.youtube.com/@Narrativ01/videos"
+  - "https://www.youtube.com/@MainTalks095/videos"
+
+top_videos:
+  count: 20
+  sort_by: "view_count"     # view_count | like_count | upload_date | duration
+  min_view_count: 20000
+  include_shorts: false
+  max_duration_seconds: 7200
+  flat_extract: true
+
+subtitles:
+  languages: ["en"]
+  prefer_manual: false
+  download_auto: true
+  format: "vtt"
+
+output:
+  base_dir: "./out"
+  filename_template: "%(channel)s/%(title)s [%(id)s]/%(title)s [%(id)s].%(ext)s"
+
+runtime:
+  concurrency: 30
+  retries: 3
+  verbose: false

@@ -1,0 +1,22 @@
+beautifulsoup4==4.14.3
+chardet==5.2.0
+click==8.3.1
+cssutils==2.11.1
+joblib==1.5.3
+lxml==6.0.2
+more-itertools==10.8.0
+nltk==3.9.2
+packaging==26.0
+pycaption==2.2.19
+PyYAML==6.0.3
+regex==2026.1.15
+setuptools==80.10.2
+soupsieve==2.8.3
+subtitle-parser==2.0.1
+tqdm==4.67.2
+typing_extensions==4.15.0
+webvtt-py==0.5.1
+wheel==0.46.3
+yt-dlp==2026.1.31
+# Editable install with no version control (yt-media-kit==0.1.0)
+-e /Users/vikrantdhawan/repos/yt-media-kit
