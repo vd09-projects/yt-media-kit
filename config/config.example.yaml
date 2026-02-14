@@ -6,6 +6,7 @@ top_videos:
   sort_by: "view_count"     # view_count | like_count | upload_date | duration
   min_view_count: 0
   include_shorts: false
+  min_duration_seconds: 0    # 0 = no minimum
   max_duration_seconds: 7200
   flat_extract: true
 
@@ -17,6 +18,8 @@ subtitles:
 
 output:
   base_dir: "./out"
+  shorts_subdir: "shorts"
+  regular_subdir: "regular"
   filename_template: "%(channel)s/%(title)s [%(id)s]/%(title)s [%(id)s].%(ext)s"
 
 runtime:

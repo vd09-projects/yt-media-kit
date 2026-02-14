@@ -3,7 +3,7 @@ import glob
 import os
 import re
 
-from yt_media_kit.core.utils import entry_to_url
+from yt_media_kit.core.utils import entry_to_url, is_short
 from yt_media_kit.youtube.selector import select_top_videos
 from yt_media_kit.ops.subtitles import download_subtitles_op
 from yt_media_kit.ops.vtt_to_text import save_transcript_for_vtt
@@ -77,6 +77,7 @@ def run_pipeline(cfg, logger, yt_client):
                 if not url or not video_id:
                     continue
 
+                short = is_short(e)
                 future = executor.submit(
                     download_subtitles_op,
                     yt_client,
@@ -84,12 +85,12 @@ def run_pipeline(cfg, logger, yt_client):
                     cfg.subtitles,
                     cfg.output,
                     cfg.runtime.retries,
+                    is_short=short,
                 )
-                futures.append((future, video_id))
+                futures.append((future, video_id, short))
 
-        for future, video_id in futures:
+        for future, video_id, short in futures:
             ok, subtitle_paths = future.result()
-            # logger.info(f"VDJI run_pipeline futures ok={ok}. video_id={video_id}. subtitle_paths={subtitle_paths}")
 
             if ok:
                 success += 1
@@ -102,8 +103,9 @@ def run_pipeline(cfg, logger, yt_client):
                         except Exception as e:
                             logger.warning(f"Failed VTT->TXT for {vtt_path}: {e}")
                 else:
-                    video_dir = _find_video_dir(cfg.output.base_dir, video_id, logger)
-                    # logger.info(f"VDJI run_pipeline futures ok={ok}. video_id={video_id}. video_dir={video_dir}")
+                    subdir = cfg.output.shorts_subdir if short else cfg.output.regular_subdir
+                    out_dir = os.path.join(cfg.output.base_dir, subdir)
+                    video_dir = _find_video_dir(out_dir, video_id, logger)
                     if video_dir:
                         _convert_all_vtts_in_dir(video_dir, logger)
                     else:

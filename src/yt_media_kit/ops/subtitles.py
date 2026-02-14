@@ -8,5 +8,6 @@ def download_subtitles_op(
     subs_cfg: SubtitlesConfig,
     out_cfg: OutputConfig,
     retries: int,
+    is_short: bool = False,
 ) -> tuple[bool, list[str]]:
-    return yt.download_subtitles(video_url, subs_cfg, out_cfg, retries)
+    return yt.download_subtitles(video_url, subs_cfg, out_cfg, retries, is_short=is_short)

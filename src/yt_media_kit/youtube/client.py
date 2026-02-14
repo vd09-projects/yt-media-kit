@@ -34,8 +34,11 @@ class YouTubeClient:
         subs: SubtitlesConfig,
         out: OutputConfig,
         retries: int,
+        is_short: bool = False,
     ) -> Tuple[bool, List[str]]:
-        ensure_dir(out.base_dir)
+        subdir = out.shorts_subdir if is_short else out.regular_subdir
+        out_dir = os.path.join(out.base_dir, subdir)
+        ensure_dir(out_dir)
 
         opts = {
             "skip_download": True,
@@ -43,7 +46,7 @@ class YouTubeClient:
             "writeautomaticsub": subs.download_auto,
             "subtitleslangs": subs.languages,
             "subtitlesformat": subs.format,
-            "outtmpl": os.path.join(out.base_dir, out.filename_template),
+            "outtmpl": os.path.join(out_dir, out.filename_template),
             "quiet": not self.verbose,
             "ignoreerrors": True,
         }

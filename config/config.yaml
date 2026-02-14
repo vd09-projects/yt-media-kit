@@ -1,19 +1,25 @@
 channels:
+  # - "https://www.youtube.com/@Reddit-rina/shorts"
+  - "https://www.youtube.com/@storiesclock/shorts"
+  - "https://www.youtube.com/@Reddit0World/shorts"
+  - "https://www.youtube.com/@RedditBook/shorts"
+  - "https://www.youtube.com/@storynest-l5q/shorts"
   # - "https://www.youtube.com/@redditdramatale/videos"
-  - "https://www.youtube.com/@redditdramatale/videos"
-  - "https://www.youtube.com/channel/UCYNDl_kj9H7Qx6W6kkGxrmQ"
-  - "https://www.youtube.com/@FamiliaReddit"
-  - "https://www.youtube.com/@couple_stories_prod/videos"
-  - "https://www.youtube.com/@RedditFamilyTales/videos"
-  - "https://www.youtube.com/@MineQley/videos"
-  - "https://www.youtube.com/@Narrativ01/videos"
-  - "https://www.youtube.com/@MainTalks095/videos"
+  # - "https://www.youtube.com/@redditdramatale/videos"
+  # - "https://www.youtube.com/channel/UCYNDl_kj9H7Qx6W6kkGxrmQ"
+  # - "https://www.youtube.com/@FamiliaReddit"
+  # - "https://www.youtube.com/@couple_stories_prod/videos"
+  # - "https://www.youtube.com/@RedditFamilyTales/videos"
+  # - "https://www.youtube.com/@MineQley/videos"
+  # - "https://www.youtube.com/@Narrativ01/videos"
+  # - "https://www.youtube.com/@MainTalks095/videos"
 
 top_videos:
   count: 20
   sort_by: "view_count"     # view_count | like_count | upload_date | duration
   min_view_count: 20000
-  include_shorts: false
+  include_shorts: true
+  min_duration_seconds: 60    # 0 = no minimum
   max_duration_seconds: 7200
   flat_extract: true
 
@@ -25,6 +31,8 @@ subtitles:
 
 output:
   base_dir: "./out"
+  shorts_subdir: "shorts"
+  regular_subdir: "regular"
   filename_template: "%(channel)s/%(title)s [%(id)s]/%(title)s [%(id)s].%(ext)s"
 
 runtime:

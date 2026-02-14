@@ -14,6 +14,9 @@ def select_top_videos(
             continue
         if isinstance(e.get("view_count"), int) and e["view_count"] < cfg.min_view_count:
             continue
+        if cfg.min_duration_seconds and isinstance(e.get("duration"), (int, float)):
+            if e["duration"] < cfg.min_duration_seconds:
+                continue
         filtered.append(e)
 
     key = cfg.sort_by

@@ -9,6 +9,7 @@ class TopVideosConfig:
     sort_by: str
     min_view_count: int
     include_shorts: bool
+    min_duration_seconds: int
     max_duration_seconds: Optional[int]
     flat_extract: bool
 
@@ -24,6 +25,8 @@ class SubtitlesConfig:
 @dataclass(frozen=True)
 class OutputConfig:
     base_dir: str
+    shorts_subdir: str
+    regular_subdir: str
     filename_template: str
 
 
