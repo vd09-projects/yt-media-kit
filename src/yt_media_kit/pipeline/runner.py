@@ -6,6 +6,7 @@ import re
 from yt_media_kit.core.utils import entry_to_url, is_short
 from yt_media_kit.youtube.selector import select_top_videos
 from yt_media_kit.ops.subtitles import download_subtitles_op
+from yt_media_kit.ops.audio import download_audio_op
 from yt_media_kit.ops.vtt_to_text import save_transcript_for_vtt
 
 
@@ -56,13 +57,18 @@ def _convert_all_vtts_in_dir(video_dir: str, logger) -> None:
 def run_pipeline(cfg, logger, yt_client):
     success = 0
     failed = 0
+    audio_success = 0
+    audio_failed = 0
+
+    audio_enabled = cfg.audio and cfg.audio.enabled
 
     # We keep downloads concurrent, then do conversion per completed download.
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=cfg.runtime.concurrency
     ) as executor:
 
-        futures: list[tuple[concurrent.futures.Future, str]] = []
+        sub_futures: list[tuple[concurrent.futures.Future, str, bool]] = []
+        audio_futures: list[tuple[concurrent.futures.Future, str]] = []
 
         for channel in cfg.channels:
             logger.info(f"Processing channel: {channel}")
@@ -78,6 +84,8 @@ def run_pipeline(cfg, logger, yt_client):
                     continue
 
                 short = is_short(e)
+
+                # Subtitle download
                 future = executor.submit(
                     download_subtitles_op,
                     yt_client,
@@ -87,9 +95,23 @@ def run_pipeline(cfg, logger, yt_client):
                     cfg.runtime.retries,
                     is_short=short,
                 )
-                futures.append((future, video_id, short))
+                sub_futures.append((future, video_id, short))
 
-        for future, video_id, short in futures:
+                # Audio download
+                if audio_enabled:
+                    audio_future = executor.submit(
+                        download_audio_op,
+                        yt_client,
+                        url,
+                        cfg.audio,
+                        cfg.output,
+                        cfg.runtime.retries,
+                        is_short=short,
+                    )
+                    audio_futures.append((audio_future, video_id))
+
+        # Collect subtitle results
+        for future, video_id, short in sub_futures:
             ok, subtitle_paths = future.result()
 
             if ok:
@@ -114,5 +136,17 @@ def run_pipeline(cfg, logger, yt_client):
             else:
                 failed += 1
 
-    logger.info(f"Done | success={success}, failed={failed}")
+        # Collect audio results
+        for future, video_id in audio_futures:
+            ok, filepath = future.result()
+            if ok:
+                audio_success += 1
+                logger.info(f"Audio downloaded: {filepath}")
+            else:
+                audio_failed += 1
+                logger.warning(f"Audio download failed for video id={video_id}")
+
+    logger.info(f"Done | subtitles: success={success} failed={failed}")
+    if audio_enabled:
+        logger.info(f"Done | audio: success={audio_success} failed={audio_failed}")
     return failed == 0

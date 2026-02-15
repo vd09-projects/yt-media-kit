@@ -1,0 +1,23 @@
+videos:
+  - "https://www.youtube.com/watch?v=id-az6A-1tM"
+  - "https://www.youtube.com/watch?v=OBkeLQP9MWs"
+  - "https://www.youtube.com/watch?v=7PnvS1cJ9_c"
+  - "https://www.youtube.com/watch?v=-9RgykBKGSQ"
+  - "https://www.youtube.com/watch?v=Tq-VFkpBz1s"
+  - "https://www.youtube.com/watch?v=WbYzDUsxkks"
+
+audio:
+  enabled: true
+  format: "mp3"                       # mp3 | wav | m4a | opus
+  quality: "192"                      # bitrate in kbps (e.g. 128, 192, 320)
+
+output:
+  base_dir: "./out"
+  shorts_subdir: "shorts"
+  regular_subdir: "regular"
+  filename_template: "%(channel)s/%(title)s [%(id)s]/%(title)s [%(id)s].%(ext)s"
+
+runtime:
+  concurrency: 4
+  retries: 3
+  verbose: false

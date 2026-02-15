@@ -29,6 +29,11 @@ subtitles:
   download_auto: true
   format: "vtt"
 
+audio:
+  enabled: true
+  format: "mp3"                       # mp3 | wav | m4a | opus
+  quality: "192"                      # bitrate in kbps (e.g. 128, 192, 320)
+
 output:
   base_dir: "./out"
   shorts_subdir: "shorts"

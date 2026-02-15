@@ -4,7 +4,7 @@ from typing import Dict, Any, List, Tuple
 import yt_dlp
 
 from yt_media_kit.core.utils import ensure_dir
-from yt_media_kit.core.config import SubtitlesConfig, OutputConfig
+from yt_media_kit.core.config import SubtitlesConfig, AudioConfig, OutputConfig
 
 
 class YouTubeClient:
@@ -71,3 +71,42 @@ class YouTubeClient:
                 self.logger.warning(f"Retry {attempt}/{retries} failed: {e}")
 
         return False, []
+
+    def download_audio(
+        self,
+        video_url: str,
+        audio_cfg: AudioConfig,
+        out: OutputConfig,
+        retries: int,
+        is_short: bool = False,
+    ) -> Tuple[bool, str | None]:
+        subdir = out.shorts_subdir if is_short else out.regular_subdir
+        out_dir = os.path.join(out.base_dir, subdir)
+        ensure_dir(out_dir)
+
+        opts = {
+            "format": "bestaudio/best",
+            "outtmpl": os.path.join(out_dir, out.filename_template),
+            "quiet": not self.verbose,
+            "ignoreerrors": True,
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": audio_cfg.format,
+                    "preferredquality": audio_cfg.quality,
+                }
+            ],
+        }
+
+        for attempt in range(1, retries + 1):
+            try:
+                with self._ydl(opts) as ydl:
+                    info = ydl.extract_info(video_url, download=True)
+
+                # yt-dlp replaces the extension after postprocessing
+                filepath = info.get("requested_downloads", [{}])[0].get("filepath")
+                return True, filepath
+            except Exception as e:
+                self.logger.warning(f"Audio retry {attempt}/{retries} failed: {e}")
+
+        return False, None

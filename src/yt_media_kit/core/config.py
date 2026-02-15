@@ -31,6 +31,13 @@ class OutputConfig:
 
 
 @dataclass(frozen=True)
+class AudioConfig:
+    enabled: bool
+    format: str
+    quality: str
+
+
+@dataclass(frozen=True)
 class RuntimeConfig:
     concurrency: int
     retries: int
@@ -44,11 +51,36 @@ class AppConfig:
     subtitles: SubtitlesConfig
     output: OutputConfig
     runtime: RuntimeConfig
+    audio: Optional[AudioConfig] = None
+
+
+@dataclass(frozen=True)
+class AudioOnlyConfig:
+    videos: List[str]
+    audio: AudioConfig
+    output: OutputConfig
+    runtime: RuntimeConfig
+
+
+def load_audio_config(path: str) -> AudioOnlyConfig:
+    with open(path, "r", encoding="utf-8") as f:
+        raw = yaml.safe_load(f)
+
+    return AudioOnlyConfig(
+        videos=raw["videos"],
+        audio=AudioConfig(**raw["audio"]),
+        output=OutputConfig(**raw["output"]),
+        runtime=RuntimeConfig(**raw["runtime"]),
+    )
 
 
 def load_config(path: str) -> AppConfig:
     with open(path, "r", encoding="utf-8") as f:
         raw = yaml.safe_load(f)
+
+    audio_cfg = None
+    if "audio" in raw:
+        audio_cfg = AudioConfig(**raw["audio"])
 
     return AppConfig(
         channels=raw["channels"],
@@ -56,4 +88,5 @@ def load_config(path: str) -> AppConfig:
         subtitles=SubtitlesConfig(**raw["subtitles"]),
         output=OutputConfig(**raw["output"]),
         runtime=RuntimeConfig(**raw["runtime"]),
+        audio=audio_cfg,
     )
