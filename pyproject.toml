@@ -5,8 +5,12 @@ description = "Config-driven YouTube media ingestion toolkit (subs now, audio la
 requires-python = ">=3.10"
 dependencies = [
   "yt-dlp>=2024.7.0",
-  "PyYAML>=6.0.1"
+  "PyYAML>=6.0.1",
+  "mcp[cli]>=1.0"
 ]
+
+[project.scripts]
+yt-mcp = "yt_media_kit.mcp_server:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

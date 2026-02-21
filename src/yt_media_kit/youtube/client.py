@@ -7,21 +7,42 @@ from yt_media_kit.core.utils import ensure_dir
 from yt_media_kit.core.config import SubtitlesConfig, AudioConfig, OutputConfig
 
 
+class _YtDlpLogger:
+    """Routes all yt-dlp output to stderr via the app logger (never stdout)."""
+
+    def __init__(self, logger):
+        self._log = logger
+
+    def debug(self, msg):
+        self._log.debug(msg)
+
+    def info(self, msg):
+        self._log.info(msg)
+
+    def warning(self, msg):
+        self._log.warning(msg)
+
+    def error(self, msg):
+        self._log.error(msg)
+
+
 class YouTubeClient:
     def __init__(self, logger, verbose: bool):
         self.logger = logger
         self.verbose = verbose
+        self._ydl_logger = _YtDlpLogger(logger)
 
-    def _ydl(self, opts: Dict[str, Any]) -> yt_dlp.YoutubeDL:
+    def _ydl(self, opts: Any) -> yt_dlp.YoutubeDL:
+        # Always inject our logger so yt-dlp never writes to stdout.
+        opts.setdefault("logger", self._ydl_logger)
+        opts["quiet"] = True          # suppress yt-dlp's own stdout printing
+        opts["no_warnings"] = not self.verbose
         return yt_dlp.YoutubeDL(opts)
 
     def list_channel_videos(self, channel_url: str, flat: bool) -> List[Dict[str, Any]]:
         opts = {
-            "quiet": not self.verbose,
             "skip_download": True,
             "extract_flat": "in_playlist" if flat else False,
-            "dump_single_json": True,
-            "forcejson": True,
             "ignoreerrors": True,
         }
         with self._ydl(opts) as ydl:
