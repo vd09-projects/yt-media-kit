@@ -12,6 +12,7 @@ def merge_top_videos(
     include_shorts: bool | None,
     min_duration_seconds: int | None,
     max_duration_seconds: int | None,
+    max_age_days: int | None = None,
 ) -> TopVideosConfig:
     return TopVideosConfig(
         count=count if count is not None else base.count,
@@ -25,6 +26,7 @@ def merge_top_videos(
             max_duration_seconds if max_duration_seconds is not None else base.max_duration_seconds
         ),
         flat_extract=base.flat_extract,
+        max_age_days=max_age_days if max_age_days is not None else base.max_age_days,
     )
 
 

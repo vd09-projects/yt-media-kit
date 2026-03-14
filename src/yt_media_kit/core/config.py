@@ -12,6 +12,7 @@ class TopVideosConfig:
     min_duration_seconds: int
     max_duration_seconds: Optional[int]
     flat_extract: bool
+    max_age_days: Optional[int] = None  # None = no limit (all time)
 
 
 @dataclass(frozen=True)

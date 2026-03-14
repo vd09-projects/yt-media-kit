@@ -13,16 +13,20 @@ channels:
   # - "https://www.youtube.com/@MineQley/videos"
   # - "https://www.youtube.com/@Narrativ01/videos"
   # - "https://www.youtube.com/@MainTalks095/videos"
-  - https://www.youtube.com/@Reddit_Report/shorts
+  # - https://www.youtube.com/@Reddit_Report/shorts
+  - https://www.youtube.com/@RedditRevolt_13/shorts
+  - https://www.youtube.com/@wolfmix500/shorts
+  - https://www.youtube.com/@RedditBook/shorts
 
 top_videos:
-  count: 80
+  count: 5
   sort_by: "view_count"     # view_count | like_count | upload_date | duration
   min_view_count: 100000
   include_shorts: true
   min_duration_seconds: 50    # 0 = no minimum
   max_duration_seconds: 7200
   flat_extract: true
+  max_age_days: 30              # null = all time | 30 = last month | 60 = last 2 months
 
 subtitles:
   languages: ["en"]

@@ -24,6 +24,7 @@ def run_pipeline(
     include_shorts: bool | None = None,
     min_duration_seconds: int | None = None,
     max_duration_seconds: int | None = None,
+    max_age_days: int | None = None,
 ) -> str:
     """
     Run the full channel pipeline: discover top videos, download subtitles
@@ -40,6 +41,7 @@ def run_pipeline(
         include_shorts: Whether to include YouTube Shorts.
         min_duration_seconds: Minimum video duration in seconds.
         max_duration_seconds: Maximum video duration in seconds.
+        max_age_days: Only include videos uploaded within this many days (e.g. 30 = last month, 60 = last 2 months). None = all time.
     """
     cfg = dataclasses.replace(
         context.cfg,
@@ -48,6 +50,7 @@ def run_pipeline(
             context.cfg.top_videos,
             count, sort_by, min_view_count,
             include_shorts, min_duration_seconds, max_duration_seconds,
+            max_age_days,
         ),
         output=merge_output(context.cfg.output, output_base_dir),
     )
