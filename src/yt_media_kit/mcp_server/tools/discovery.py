@@ -66,7 +66,7 @@ def list_downloaded_files(
                     Omit to return every file found.
         output_base_dir: Directory to scan. Defaults to the configured output base_dir.
     """
-    base_dir = output_base_dir or context.cfg.output.base_dir
+    base_dir = os.path.abspath(output_base_dir or context.cfg.output.base_dir)
 
     if not os.path.isdir(base_dir):
         return []

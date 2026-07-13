@@ -47,7 +47,9 @@ class YouTubeClient:
         }
         with self._ydl(opts) as ydl:
             info = ydl.extract_info(channel_url, download=False)
-            return [e for e in info.get("entries", []) if e]
+            # A dead/renamed channel makes yt-dlp return None; guard so one
+            # bad channel doesn't crash the whole discovery run.
+            return [e for e in (info or {}).get("entries", []) if e]
 
     def download_subtitles(
         self,

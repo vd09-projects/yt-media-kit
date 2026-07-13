@@ -14,9 +14,10 @@ channels:
   # - "https://www.youtube.com/@Narrativ01/videos"
   # - "https://www.youtube.com/@MainTalks095/videos"
   # - https://www.youtube.com/@Reddit_Report/shorts
-  - https://www.youtube.com/@RedditRevolt_13/shorts
-  - https://www.youtube.com/@wolfmix500/shorts
-  - https://www.youtube.com/@RedditBook/shorts
+  # - https://www.youtube.com/@RedditRevolt_13/shorts   # 404 — channel gone (2026-07)
+  # - https://www.youtube.com/@wolfmix500/shorts
+  - https://www.youtube.com/@Reddit_Report/shorts
+  # - https://www.youtube.com/@RedditBook/shorts
 
 top_videos:
   count: 5
